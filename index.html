@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#172b30">
+  <title>Underground Wars</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game">
+    <canvas id="arena" aria-label="Underground Wars battlefield"></canvas>
+    <header class="battle-hud">
+      <div class="team red" id="redTeam">
+        <div class="castle-badge" aria-hidden="true"><svg viewBox="0 0 32 36"><path d="M2 2h28v19L16 34 2 21z" fill="currentColor"/><path d="M8 11V7h4v4h8V7h4v4h2v13H6V11zm5 13h6v-7h-6z" fill="#fff5d9"/></svg></div>
+        <div class="team-stats"><div class="team-meta"><span>RED CASTLE</span></div><div class="health-track" id="redHealth" role="progressbar" aria-label="Red castle health" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i class="health-lag" id="redLag"></i><i class="health-fill" id="redFill"></i><div class="health-ticks"></div><span class="health-value"><b id="redHP">100</b><small>/ 100</small></span></div></div>
+      </div>
+      <div class="center"><span class="eyebrow">UNDERGROUND WARS</span><div class="turn-pill"><i id="turnDot"></i><strong id="turn">READY</strong></div></div>
+      <div class="team blue" id="blueTeam">
+        <div class="castle-badge" aria-hidden="true"><svg viewBox="0 0 32 36"><path d="M2 2h28v19L16 34 2 21z" fill="currentColor"/><path d="M8 11V7h4v4h8V7h4v4h2v13H6V11zm5 13h6v-7h-6z" fill="#fff5d9"/></svg></div>
+        <div class="team-stats"><div class="team-meta"><span>BLUE CASTLE</span></div><div class="health-track" id="blueHealth" role="progressbar" aria-label="Blue castle health" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i class="health-lag" id="blueLag"></i><i class="health-fill" id="blueFill"></i><div class="health-ticks"></div><span class="health-value"><b id="blueHP">100</b><small>/ 100</small></span></div></div>
+      </div>
+    </header>
+    <section class="saw-inventory red" id="redInventory" aria-label="Red saw inventory"><div class="inventory-heading"><span class="inventory-blade" aria-hidden="true">✹</span><b id="redCount">5</b><span>SAWS<br>LEFT</span></div><div id="redSaws" class="saws"></div><div class="saw-feedback" id="redSawFeedback" role="status">READY</div></section>
+    <section class="saw-inventory blue" id="blueInventory" aria-label="Blue saw inventory"><div class="inventory-heading"><span class="inventory-blade" aria-hidden="true">✹</span><b id="blueCount">5</b><span>SAWS<br>LEFT</span></div><div id="blueSaws" class="saws"></div><div class="saw-feedback" id="blueSawFeedback" role="status">READY</div></section>
+    <div id="base-gauges"></div>
+    <div id="effects" aria-hidden="true"></div>
+    <div id="toast" role="status"></div>
+    <footer><button id="sound" class="utility" aria-label="Toggle sound">♫</button></footer>
+    <section id="overlay"><div class="panel" id="resultPanel"><span class="eyebrow">DIG. RECRUIT. SIEGE.</span><div class="title-saw" aria-hidden="true">✹</div><h1>UNDERGROUND <em>WARS</em></h1><p id="message">Loop rockets. Recruit miners.<br>Return home. Bring the siege.</p><div id="options"><button class="mode selected" data-mode="ai">VS AI</button><button class="mode" data-mode="local">2 PLAYERS</button></div><button class="primary" id="start">LET’S DIG <span>↘</span></button><small id="hint">WASD / arrows · drag to steer · space to launch</small></div></section>
+  </main>
+  <script src="vendor/three.min.js"></script>
+  <script src="renderer.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
