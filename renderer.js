@@ -454,7 +454,7 @@ class SiegeRenderer {
       base.ring.material.opacity=active?(fuel<30?.6+.4*Math.sin(clock*9):1):.4;
       const percent=Math.round(fuel/140*100);base.value.textContent=percent+'%';base.label.classList.toggle('active',active);base.label.classList.toggle('low',active&&fuel<30);
       base.label.setAttribute('aria-valuenow',percent);base.label.title=`${side===s?'Active':'Next'} saw fuel: ${percent}% (${Math.ceil(fuel)} / 140)`;
-      const labelPoint=new THREE.Vector3();base.group.getWorldPosition(labelPoint);labelPoint.x+=s===0?.72:-.72;labelPoint.z+=.08;labelPoint.project(this.camera);
+      const labelPoint=new THREE.Vector3();base.group.getWorldPosition(labelPoint);labelPoint.x-=.72;labelPoint.z+=.08;labelPoint.project(this.camera);
       base.label.style.left=`${(labelPoint.x+1)*.5*this.width}px`;base.label.style.top=`${(-labelPoint.y+1)*.5*this.height}px`;
     }
     this.lastHP=[...hp];
