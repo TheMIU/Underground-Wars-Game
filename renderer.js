@@ -139,18 +139,20 @@ class SiegeRenderer {
       }
     }
     const soil = new THREE.CanvasTexture(this.soilCanvas); soil.colorSpace = THREE.SRGBColorSpace;
+    // Extend the cutaway beyond the viewport without stretching the arena texture.
+    // Clamped mask edges stay solid outside the playable excavation area.
+    soil.wrapS=THREE.RepeatWrapping;
+    soil.repeat.set(120/12,80/4.5);soil.offset.set((1-120/12)/2,1-80/4.5);
     this.maskCanvas = document.createElement('canvas'); this.maskCanvas.width = 1200; this.maskCanvas.height = 450;
     this.mask = this.maskCanvas.getContext('2d'); this.clearMask();
     this.maskTexture = new THREE.CanvasTexture(this.maskCanvas);
+    this.maskTexture.repeat.copy(soil.repeat);this.maskTexture.offset.copy(soil.offset);
     const front = new THREE.MeshStandardMaterial({ map: soil, alphaMap: this.maskTexture, alphaTest: .48, roughness: 1 });
-    this.mesh(new THREE.PlaneGeometry(12, 4.5), front, this.world, 0, -1.1, 0, false);
+    this.mesh(new THREE.PlaneGeometry(120, 80), front, this.world, 0, 1.15-40, 0, false);
     // A real recessed backing is visible through the excavated front surface.
-    this.box(this.world, 12, 4.5, .75, 0x342b30, 0, -1.1, -.75);
-    this.box(this.world, .14, 4.5, 1.4, 0x74513f, -6.07, -1.1, -.68);
-    this.box(this.world, .14, 4.5, 1.4, 0x74513f, 6.07, -1.1, -.68);
-    this.box(this.world, 12.25, .14, 1.55, 0x654634, 0, -3.42, -.65);
-    this.box(this.world, 12.25, .14, 1.7, 0x5e8650, 0, 1.17, -.67);
-    this.box(this.world, 12.3, .065, 1.78, 0xa5c875, 0, 1.25, -.63);
+    this.box(this.world, 120, 80, .75, 0x342b30, 0, 1.15-40, -.75);
+    this.box(this.world, 120, .14, 1.7, 0x5e8650, 0, 1.17, -.67);
+    this.box(this.world, 120, .065, 1.78, 0xa5c875, 0, 1.25, -.63);
     for (const sign of [-1, 1]) {
       for (let i = 0; i < 14; i++) {
         this.box(this.world, .09, .035, .11, i % 2 ? 0x7fa660 : 0xbedb8d, sign * (.4 + i * .39), 1.31, -.12 - (i % 3) * .4);
@@ -166,7 +168,7 @@ class SiegeRenderer {
   }
 
   buildCastle(x, side) {
-    const castle = new THREE.Group(); castle.position.set(x, 1.28, -.38);
+    const castle = new THREE.Group(); castle.position.set(x, 1.28, -.38);castle.scale.setScalar(.8);
     const team = this.sides[side], stone = side ? 0xcbd9d9 : 0xe7dcca;
     this.box(castle, 1.74, .15, 1.12, 0x6a7e72, 0, .03, -.06);
     this.box(castle, 1.18, .83, .7, stone, 0, .48, 0);

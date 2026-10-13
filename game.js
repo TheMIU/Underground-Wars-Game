@@ -20,17 +20,17 @@ function createResources(){
   const left=types.map((type,i)=>({type,x:slots[i].x+Math.round(Math.random()*28-14),y:slots[i].y+Math.round(Math.random()*28-14),alive:true}));
   return [...left,...left.map(item=>({...item,x:W-item.x}))];
 }
-let mode='ai',state='menu',side=0,turns=[0,0],hp=[100,100],items=[],tunnels=[],saw=null,shots=[],units=[],particles=[],waypoints=[],aiIndex=0,clock=0,last=0,toastTime=0,shake=0,sound=true,audio=null,keys={},pointer=null,stick=null,stickDirection=null,activePointer=null,resolveTime=0;
+let mode='ai',state='menu',side=0,turns=[0,0],hp=[100,100],items=[],tunnels=[],saw=null,shots=[],units=[],particles=[],waypoints=[],aiIndex=0,clock=0,last=0,toastTime=0,shake=0,audio=null,keys={},pointer=null,stick=null,stickDirection=null,activePointer=null,resolveTime=0;
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 function segmentDistance(p,a,b){const dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy||1)));return Math.hypot(p.x-a.x-dx*t,p.y-a.y-dy*t)}
 function inside(p,poly){let yes=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a.y>p.y)!=(b.y>p.y)&&p.x<(b.x-a.x)*(p.y-a.y)/(b.y-a.y)+a.x)yes=!yes}return yes}
-function tone(f,d=.1){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*.5,audio.currentTime+d);g.gain.setValueAtTime(.07,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch{}}
+function tone(f,d=.1){try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*.5,audio.currentTime+d);g.gain.setValueAtTime(.07,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch{}}
 function toast(t){$('toast').textContent=t;toastTime=2}
 let previousHP=[100,100],previousSaws=[-1,-1],sawResults=[Array(5).fill("ready"),Array(5).fill("ready")];
 function remainingSaws(team){return sawResults[team].filter(result=>result!=='lost').length}
 function hud(){
   for(let s=0;s<2;s++){
-    const name=s?'blue':'red';$(name+'HP').textContent=hp[s];$(name+'Count').textContent=remainingSaws(s);
+    const name=s?'blue':'red';$(name+'HP').textContent=hp[s];
     $(name+'Fill').style.width=hp[s]+'%';$(name+'Lag').style.width=hp[s]+'%';
     $(name+'Health').setAttribute('aria-valuenow',hp[s]);
     $(name+'Team').classList.toggle('active',s===side);
@@ -45,7 +45,7 @@ function hud(){
   $('turn').textContent=state==='menu'?'READY':`${side?'BLUE':'RED'} · ${turns[0]+turns[1]+(state==='ready'?1:0)}`;
   $('turnDot').style.background=colors[side];
 }
-function reset(){clearSteering();sawResults=[Array(5).fill('ready'),Array(5).fill('ready')];for(const name of ['red','blue']){$(name+'Inventory').setAttribute('data-outcome','ready');$(name+'Inventory').classList.remove('inventory-focus');$(name+'SawFeedback').textContent='READY'}$('resultPanel').removeAttribute('data-result');turns=[0,0];hp=[100,100];side=0;items=createResources();tunnels=[];shots=[];units=[];particles=[];saw=null;pointer=null;keys={};state='ready';$('overlay').classList.add('hidden');toast('Loop rockets. Touch units to recruit.');hud()}
+function reset(){clearSteering();sawResults=[Array(5).fill('ready'),Array(5).fill('ready')];for(const name of ['red','blue']){$(name+'Inventory').setAttribute('data-outcome','ready');$(name+'Inventory').classList.remove('inventory-focus')}$('resultPanel').removeAttribute('data-result');turns=[0,0];hp=[100,100];side=0;items=createResources();tunnels=[];shots=[];units=[];particles=[];saw=null;pointer=null;keys={};state='ready';$('overlay').classList.add('hidden');toast('Loop rockets. Touch units to recruit.');hud()}
 function launch(){if(state!=='ready'||window.LandscapeGate?.blocked)return;const slot=sawResults[side].findIndex(result=>result==='ready'||result==='saved');if(slot<0){next();return}const b=bases[side];saw={x:b.x,y:b.y,angle:Math.PI/2,fuel:100,path:[{...b}],distance:0,slot};turns[side]++;state='dig';pointer=null;sawResults[side][slot]='active';focusSaw('active');if(side===1&&mode==='ai')planAI();tone(170);hud()}
 function planAI(){const b=bases[side],targets=items.filter(i=>i.alive&&i.type==='missile'&&i.x>600).sort((a,c)=>dist(a,b)-dist(c,b));if(!targets.length){const distant=items.filter(i=>i.alive&&i.type==='missile').sort((a,c)=>dist(a,b)-dist(c,b))[0],miner=items.filter(i=>i.alive&&i.type==='unit').sort((a,c)=>dist(a,b)-dist(c,b))[0];waypoints=distant?[{x:distant.x,y:distant.y}]:miner?[{x:miner.x,y:miner.y},{x:miner.x,y:BOTTOM+40}]:[{x:W+40,y:b.y}];aiIndex=0;return}const t=targets[0],r=47;
 // The AI digs the same physical path as a player, including pickup and collision checks.
@@ -76,7 +76,6 @@ function updateUnits(dt){
 function focusSaw(outcome){
   const name=side?'blue':'red',card=$(name+'Inventory');
   card.setAttribute('data-outcome',outcome);card.classList.remove('inventory-focus');void card.offsetWidth;card.classList.add('inventory-focus');
-  $(name+'SawFeedback').textContent=outcome==='saved'?'✓ SAW SAVED':outcome==='lost'?'× SAW DESTROYED':'SAW IN RUN';
 }
 function finish(reason,hit){if(state!=='dig')return;clearSteering();sawResults[side][saw.slot]=reason==='return'?'saved':'lost';focusSaw(reason==='return'?'saved':'lost');const captured=hit?[hit]:reason==='return'?items.filter(i=>i.alive&&i.type==='missile'&&inside(i,saw.path)):[];if(reason==='return'){saw.returned=true;saw.x=bases[side].x;saw.y=bases[side].y;saw.path.push({...bases[side]});tone(520);toast(captured.length?`${captured.length} MISSILE${captured.length>1?'S':''} CAPTURED`:'SAW SAVED')}else if(reason==='victory'){tone(600,.25);toast('CASTLE DOWN')}else{if(hit){saw.destroyedAt=clock;saw.destroyedSide=side;saw.destroyedAngle=clock*18;shake=5;burst(saw.x,saw.y,'#ffe5a0',26);burst(saw.x,saw.y,'#e4eff1',10);tone(650,.07)}burst(saw.x,saw.y,colors[side]);tone(80,.25);toast(hit?'SAW DESTROYED':'SAW LOST')}
 tunnels.push({path:saw.path.map(p=>({...p})),side});captured.forEach((m,i)=>{m.alive=false;shots.push({x:m.x,y:m.y,start:{x:m.x,y:m.y},side,t:-i*.25,hit:false})});state='resolve';resolveTime=1.3;hud()}
@@ -101,7 +100,7 @@ function draw(){presentation.render({items,saw,side,state,clock,hp,shots,units,p
 let accumulator=0;
 function frame(t){accumulator+=Math.min(.1,(t-last)/1000||0);last=t;while(accumulator>=1/120){update(1/120);accumulator-=1/120}draw();requestAnimationFrame(frame)}
 document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.mode').forEach(v=>v.classList.toggle('selected',v===b))});$('start').onclick=async()=>{if(window.LandscapeGate&&!await window.LandscapeGate.tryLandscape())return;tone(300);if(state==='menu'||state==='end'){reset();$('options').style.display='flex'}};
-$('sound').onclick=()=>{sound=!sound;$('sound').textContent=sound?'♫':'♩';$('sound').style.opacity=sound?1:.5};
+
 window.addEventListener('keydown',e=>{if(window.LandscapeGate?.blocked)return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();keys[e.key.toLowerCase().startsWith('arrow')?e.key:e.key.toLowerCase()]=true;if(e.key===' '&&!e.repeat){if(state==='ready')launch();else if(state==='menu'||state==='end')$('start').click()}});window.addEventListener('keyup',e=>{delete keys[e.key];delete keys[e.key.toLowerCase()]});window.addEventListener('blur',()=>{keys={};clearSteering();});
 window.addEventListener('landscapechange',()=>{keys={};clearSteering();accumulator=0});
 window.addEventListener('resize',clearSteering);
