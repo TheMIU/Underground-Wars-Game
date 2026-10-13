@@ -29,8 +29,12 @@
     <footer><button id="sound" class="utility" aria-label="Toggle sound">♫</button></footer>
     <section id="overlay"><div class="panel" id="resultPanel"><span class="eyebrow">DIG. RECRUIT. SIEGE.</span><div class="title-saw" aria-hidden="true">✹</div><h1>UNDERGROUND <em>WARS</em></h1><p id="message">Loop rockets. Recruit miners.<br>Return home. Bring the siege.</p><div id="options"><button class="mode selected" data-mode="ai">VS AI</button><button class="mode" data-mode="local">2 PLAYERS</button></div><button class="primary" id="start">LET’S DIG <span>↘</span></button><small id="hint">WASD / arrows · drag to steer · space to launch</small></div></section>
   </main>
+  <section id="rotate-screen" role="dialog" aria-modal="true" aria-labelledby="rotate-title" hidden>
+    <div class="rotate-card"><svg class="rotate-icon" viewBox="0 0 120 100" aria-hidden="true"><rect x="39" y="14" width="42" height="72" rx="8" fill="none" stroke="currentColor" stroke-width="5"/><path d="M54 23h12M56 77h8M20 61A43 43 0 0 1 29 22m-1 0-14 2m14-2 2 14M100 39a43 43 0 0 1-9 39m1 0 14-2m-14 2-2-14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg><h2 id="rotate-title">Rotate your phone</h2><p>Play in landscape</p><button id="rotate-action" class="primary" hidden>TRY LANDSCAPE ↻</button></div>
+  </section>
   <script src="vendor/three.min.js"></script>
   <script src="renderer.js"></script>
+  <script src="landscape.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

@@ -21,3 +21,5 @@ Three.js renders a real 3D diorama with modeled castles, rockets, canisters, ani
 Every new match shuffles the resource types and randomizes their positions within spaced slots. The resulting layout is reflected exactly around the arena center: each side has six missiles, one fuel tank, and two miners at identical depths and distances from its base. Positions stay fixed during the match. Spacing prevents overlapping resources. Both players have equal HP, saw speed, fuel consumption, starting fuel, pickup values, and damage. Resources remain neutral and can be reached by either player. The camera is centered and does not favor either side. AI uses ordinary waypoint movement and the same fuel, swept collision, and enclosure rules.
 
 Three.js r160.1 is distributed under the MIT license; see `vendor/THREE-LICENSE.txt`.
+
+Mobile play requires landscape. On supported browsers, Play requests fullscreen and a landscape orientation lock. If locking is unavailable or denied, a “Rotate your phone” screen blocks input and freezes the run until the phone is landscape again. Desktop windows are not orientation-blocked.
