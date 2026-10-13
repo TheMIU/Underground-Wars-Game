@@ -53,3 +53,19 @@ footer{display:grid;grid-template-columns:42px minmax(0,1fr) 42px}.run-controls{
 .battle-hud{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(25px,8vw,150px)}.battle-hud>.team{grid-template-columns:148px minmax(0,1fr);grid-template-rows:auto;gap:9px;align-items:center}.battle-hud>.team.blue{grid-template-columns:minmax(0,1fr) 148px}.battle-hud .saw-inventory,.battle-hud .saw-inventory.blue{display:flex;align-items:center;justify-content:center;grid-row:1;grid-column:1;padding:4px 5px;gap:0;border-radius:8px;min-height:31px}.battle-hud .saw-inventory.blue{grid-column:2}.battle-hud .team-stats,.battle-hud .blue .team-stats{grid-row:1;grid-column:2}.battle-hud .blue .team-stats{grid-column:1}.battle-hud .saw-inventory .saws{display:flex;gap:5px;margin:0}.battle-hud .saw-inventory .saws i{width:22px;height:21px}.battle-hud .health-track{height:20px}.battle-hud .health-value b{font-size:14px}#bottom-info{position:absolute;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:7px;max-width:94%;pointer-events:none;white-space:nowrap}#bottom-info .turn-pill{margin:0;padding:7px 10px;font-size:9px;letter-spacing:.6px}#bottom-info .turn-pill strong{font-size:9px}#bottom-info #toast{position:static;inset:auto;transform:none;font-size:10px;padding:7px 12px;max-width:100%;text-overflow:ellipsis;overflow:hidden;border-radius:18px}#bottom-info #toast:empty{display:none}
 @media(max-width:900px){.battle-hud>.team{grid-template-columns:116px minmax(0,1fr);gap:6px}.battle-hud>.team.blue{grid-template-columns:minmax(0,1fr) 116px}.battle-hud .saw-inventory .saws{gap:3px}.battle-hud .saw-inventory .saws i{width:18px;height:19px}.battle-hud .saw-inventory{min-height:28px}.battle-hud .health-track{height:18px}.battle-hud .health-value b{font-size:12px}}
 @media(max-width:600px){.battle-hud{gap:20px}.battle-hud>.team{grid-template-columns:98px minmax(0,1fr);gap:5px}.battle-hud>.team.blue{grid-template-columns:minmax(0,1fr) 98px}.battle-hud .saw-inventory .saws{gap:2px}.battle-hud .saw-inventory .saws i{width:15px;height:17px}.battle-hud .blade-icon{width:12px;height:12px}#bottom-info{gap:5px}#bottom-info #toast{font-size:8px;padding:6px 8px}#bottom-info .turn-pill{padding:6px 8px}#bottom-info .turn-pill strong{font-size:8px}}
+/* Both mirrored HUD rows must center their HP bars, including Blue. */
+.battle-hud > .team,
+.battle-hud > .team.blue {
+  align-items: center;
+}
+.battle-hud .team-stats,
+.battle-hud .blue .team-stats {
+  align-self: center;
+  margin: 0;
+}
+.battle-hud .saw-inventory,
+.battle-hud .saw-inventory.blue {
+  align-self: center;
+  flex-direction: row;
+  margin: 0;
+}
